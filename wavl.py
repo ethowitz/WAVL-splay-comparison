@@ -138,10 +138,10 @@ class WAVL(bst.BST):
             v.parent = u.parent
 
     def get_min(self, root):
-        if root.left == None:
-            return root
-        else:
-            return self.get_min(root.left)
+        x = root
+        while x.left != None:
+            x = x.left
+        return x
 
     # adapted from CLRS edition 3, page 298
     def _remove(self, z):
@@ -150,17 +150,6 @@ class WAVL(bst.BST):
         m = None
         par = z.parent
         produces_3child = False
-        print("parent's children: ", end='')
-        print(par.left, end=' ')
-        print(par.right)
-        print("z's rank: ", end='')
-        print(z.rank)
-        print("parent's rank: ", end='')
-        print(par.rank)
-        print("z's children: ", end='')
-        print(z.left, end=' ')
-        print(z.right)
-
 
         # determine how to rebalance
         if z.left == None and z.right == None and z.parent:
@@ -187,10 +176,12 @@ class WAVL(bst.BST):
             y.left.parent = y
             n = y
 
+        if n:
+            n.rank = z.rank
+
         if produces_22leaf:
             assert m == par
             assert self.rank_diffs(m) == (2, 2)
-            print("here")
             self.demote(m)
             if m.parent and m.parent.rank - m.rank == 3:
                 self.deletion_rebalance(m, par)
@@ -203,7 +194,6 @@ class WAVL(bst.BST):
             self.deletion_rebalance(n, par)
 
     def deletion_rebalance(self, node, parent):
-        print("rebalancing")
         x = node
         y = None
         par = parent
@@ -222,15 +212,6 @@ class WAVL(bst.BST):
             x_rank = -1
         else:
             x_rank = x.rank
-
-        print("par rank: ", end='')
-        print(par.rank)
-        print("x rank: ", end='')
-        print(x_rank)
-        print("y rank: ", end='')
-        print(y.rank)
-        print("y rank diffs: ", end='')
-        print(self.rank_diffs(y))
 
         while par.rank - x_rank == 3 and (par.rank - y.rank == 2 or self.rank_diffs(y) == (2, 2)):
             self.demote(par)
@@ -316,8 +297,6 @@ class WAVL(bst.BST):
         if node.left == None and node.right == None:
             return node.rank == 0
         elif node.left and node.right:
-            print(node.rank)
-            print(node.left.rank)
             assert (node.rank - node.left.rank == 1 or node.rank - node.left.rank == 2)
             assert (node.rank - node.right.rank == 1 or node.rank - node.right.rank == 2)
             return (node.rank - node.left.rank == 1 or node.rank - node.left.rank == 2) and (node.rank - node.right.rank == 1 or node.rank - node.right.rank == 2) and self._validate(node.left) and self._validate(node.right)
