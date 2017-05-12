@@ -27,6 +27,10 @@ class BST:
             else:
                 node.right = Node(key, parent=node)
 
+    def print_root(self):
+        print("root is ", end='')
+        print(self.root.key)
+
     def get_node(self, key, node):
         if key == node.key:
             return node
@@ -95,6 +99,38 @@ class BST:
             return self._search(key, node.left)
         else:
             return self._search(key, node.right)
+
+    # adapted from CLRS edition 3, page 313
+    def left_rotate(self, x):
+        y = x.right
+        x.right = y.left
+        if y.left != None:
+            y.left.parent = x
+        y.parent = x.parent
+        if x.parent == None:
+            self.root = y
+        elif x == x.parent.left:
+            x.parent.left = y
+        else:
+            x.parent.right = y
+        y.left = x
+        x.parent = y
+
+    # adapted from CLRS edition 3, page 313
+    def right_rotate(self, x):
+        y = x.left
+        x.left = y.right
+        if y.right != None:
+            y.right.parent = x
+        y.parent = x.parent
+        if x.parent == None:
+            self.root = y
+        elif x == x.parent.right:
+            x.parent.right = y
+        else:
+            x.parent.left = y
+        y.right = x
+        x.parent = y
 
     def inorder(self):
         self._inorder(self.root)
