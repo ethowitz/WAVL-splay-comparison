@@ -62,6 +62,7 @@ class BST:
 
     # adapted from CLRS edition 3, page 298
     def _remove(self, z):
+        tosplay = None
         if z.left == None:
             self.transplant(z, z.right)
         elif z.right == None:
@@ -141,22 +142,3 @@ class BST:
             self._inorder(node.left)
             print(node.key, end=' ')
             self._inorder(node.right)
-
-    def levelorder_debug(self):
-        self._levelorder_debug(self, node)
-
-    def _levelorder_debug(self, node):
-        if node:
-            print("key: ", end='')
-            print(node.key, end=', ')
-            print("left: ", end='')
-            if node.left:
-                print(node.left.key, end=', ')
-            else:
-                print("nil, ", end='')
-            if node.right:
-                print(node.right.key, end=', ')
-            else:
-                print("nil, ", end='')
-            self._levelorder_debug(node.left)
-            self._levelorder_debug(node.right)
