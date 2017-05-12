@@ -1,0 +1,8 @@
+This repository contains implementations of a standard binary search tree, a
+splay tree, and a WAVL (weak AVL) tree. It also contains a suite of tests that I
+designed to gauge the relative performance of the three trees. Everything is
+written in Python 3, and the only thing you need to do to run the tests is type
+"python test_suite.py".
+
+Here is a link to the analysis of the results I found:
+https://sites.google.com/view/bst-comparison/home
