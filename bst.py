@@ -1,8 +1,9 @@
 class Node:
-    def __init__(self, key, left=None, right=None):
+    def __init__(self, key, left=None, right=None, parent=None):
         self.left = left
         self.right = right
         self.key = key
+        self.parent = parent
 
 class BST:
     def __init__(self):
@@ -19,15 +20,57 @@ class BST:
             if node.left:
                 self._insert(key, node.left)
             else:
-                node.left = Node(key)
+                node.left = Node(key, parent=node)
         else:
             if node.right:
                 self._insert(key, node.right)
             else:
-                node.right = Node(key)
+                node.right = Node(key, parent=node)
+
+    def get_node(self, key, node):
+        if key == node.key:
+            return node
+        elif key < node.key:
+            return self.get_node(key, node.left)
+        else:
+            return self.get_node(key, node.right)
 
     def remove(self, key):
-        pass
+        self._remove(self.get_node(key, self.root))
+
+    # adapted from CLRS edition 3, page 296
+    def transplant(self, u, v):
+        if u.parent == None:
+            self.root = v
+        elif u == u.parent.left:
+            u.parent.left = v
+        else:
+            u.parent.right = v
+
+        if v != None:
+            v.parent = u.parent
+
+    def get_min(self, root):
+        if root.left == None:
+            return root
+        else:
+            return self.get_min(root.left)
+
+    # addapted from CLRS edition 3, page 298
+    def _remove(self, z):
+        if z.left == None:
+            self.transplant(z, z.right)
+        elif z.right == None:
+            self.transplant(z, z.left)
+        else:
+            y = self.get_min(z.right)
+            if y.parent != z:
+                self.transplant(y, y.right)
+                y.right = z.right
+                y.right.parent = y
+            self.transplant(z, y)
+            y.left = z.left
+            y.left.parent = y
 
     def height(self):
         return self._height(self.root)
